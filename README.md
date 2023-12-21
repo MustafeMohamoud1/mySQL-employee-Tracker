@@ -1,37 +1,43 @@
-# mySQL-employee-Tracker
-<!-- 
-Use node.js, inquirer and mySQL to create a cli app to view and manage the employee database
+Mustafe's SQL employee tracker
 
-Acceptance criteria:
-I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+This command-line application is designed to efficiently manage a company's employee database. Built using Node.js, Inquirer, and MySQL, it provides a user-friendly interface for adding, viewing, updating, and deleting employee information within the database.
 
-^^create an SQL database with tables for each of these^^
+Features
 
-WHEN I choose to view all departments
-THEN I am presented with a formatted table showing department names and department ids
+- View Employees: Display a comprehensive list of all employees, including their names, roles, departments, salaries, and managers.
+- Add Employee: Easily add a new employee to the database by providing relevant details such as name, role, department, salary, and manager.
+- Update Employee Role: Modify an employee's role by selecting the desired employee and assigning a new role from the available options.
+- View Departments: View a list of all departments along with their respective department IDs.
+- Add Department: Add a new department to the database by providing a department name.
+- View Roles: Display a list of all available roles, including their IDs, titles, and associated salaries.
+- Add Role: Add a new role to the database by specifying a title, salary, and the department to which it belongs.
+- Remove Employee: Remove an existing employee from the database by selecting them from the list.
 
-WHEN I choose to view all roles
-THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+Getting Started
 
-WHEN I choose to view all employees
-THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+- Clone the repository to your local machine.
+ git clone https://github.com/your-username/employee-database-cli.git
 
-^^Select^^
+- Install dependencies: npm install
 
-WHEN I choose to add a department
-THEN I am prompted to enter the name of the department and that department is added to the database
+- Set up the MySQL database by running the provided SQL script.
 
-WHEN I choose to add a role
-THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+- mysql -u your_username -p < schema.sql
 
-WHEN I choose to add an employee
-THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+- Configure the database connection in index.js with your MySQL credentials.
+javascript
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'your_password',
+  database: 'employee_db',
+});
 
-^^Insert row/record^^
+- Run the application.
+node index.js
 
+Dependencies
 
-WHEN I choose to update an employee role
-THEN I am prompted to select an employee to update and their new role and this information is updated in the database
-
-^^Update row/record^^
- -->
+Node.js: The application is built on the Node.js runtime.
+Inquirer: Used for interactive command-line user interfaces.
+MySQL: Enables communication with the MySQL database.

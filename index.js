@@ -72,8 +72,16 @@ function startApp() {
         })
     }
 
+    function viewEmployees(){
+        // connection directly to MySQL database and query keyword to start query
+        connection.query("SELECT * FROM employees", (err, res)=>{
+            if(err) throw err
 
-    // view employees
+            console.table(res)
+
+                startApp()
+        })
+    }
 
 
     //add department
@@ -96,6 +104,43 @@ function startApp() {
 
     }
 
+    function addRole(){
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "RoleName",
+                message: "Please enter the name of the new role"
+            }
+        ]).then(data => {
+            connection.query("INSERT INTO roles SET ?", 
+            {
+               name: data.departmentName
+            }
+            );
+            console.log("new role added")
+            startApp()
+        })
+
+    }
+
+    function addEmployee(){
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "EmployeeName",
+                message: "Please enter the name of the new employee"
+            }
+        ]).then(data => {
+            connection.query("INSERT INTO employees SET ?", 
+            {
+               name: data.departmentName
+            }
+            );
+            console.log("new employee added")
+            startApp()
+        })
+
+    }
 
 
 
