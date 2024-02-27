@@ -52,35 +52,38 @@ function startApp() {
 
     function viewDepartments(callback){
         // connection directly to MySQL database and query keyword to start query
-        connection.query("SELECT * FROM departments", (err, res)=>{
-            if(err) throw err
-
-            console.table(res)
-
-                callback();
-        })
+        connection.query("SELECT * FROM departments", (err, res) => {
+            if (err) {
+              console.error("Error fetching departments:", err);
+            } else {
+              console.table(res);
+            }
+            callback();
+        });
     }
 
     function viewRoles(callback){
         // connection directly to MySQL database and query keyword to start query
-        connection.query("SELECT * FROM roles", (err, res)=>{
-            if(err) throw err
-
-            console.table(res)
-
+        connection.query("SELECT * FROM roles", (err, res) => {
+            if (err) {
+              console.error("Error fetching roles:", err);
+            } else {
+              console.table(res);
+            }
                 callback();
-        })
+        });
     }
 
     function viewEmployees(callback){
         // connection directly to MySQL database and query keyword to start query
-        connection.query("SELECT * FROM employees", (err, res)=>{
-            if(err) throw err
-
-            console.table(res)
-
-                callback();
-        })
+        connection.query("SELECT * FROM employees", (err, res) => {
+            if (err) {
+              console.error("Error fetching employees:", err);
+            } else {
+              console.table(res);
+            }
+            callback();
+        });
     }
 
 
@@ -100,7 +103,7 @@ function startApp() {
             );
             console.log("new department added")
             callback();
-        })
+        });
 
     }
 
@@ -119,7 +122,7 @@ function startApp() {
             );
             console.log("new role added")
             callback();
-        })
+        });
 
     }
 
@@ -138,7 +141,7 @@ function startApp() {
             );
             console.log("new employee added")
             callback();
-        })
+        });
 
     }
 
