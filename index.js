@@ -95,7 +95,7 @@ function startApp() {
         ]).then(data => {
             connection.query("INSERT INTO departments SET ?", 
             {
-               name: data.departmentName
+               name: data.DepartmentName
             }
             );
             console.log("new department added")
@@ -114,7 +114,7 @@ function startApp() {
         ]).then(data => {
             connection.query("INSERT INTO roles SET ?", 
             {
-               name: data.departmentName
+               name: data.RoleName
             }
             );
             console.log("new role added")
@@ -133,7 +133,7 @@ function startApp() {
         ]).then(data => {
             connection.query("INSERT INTO employees SET ?", 
             {
-               name: data.departmentName
+               name: data.EmployeeName
             }
             );
             console.log("new employee added")
