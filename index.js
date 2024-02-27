@@ -99,7 +99,7 @@ function startApp() {
             }
             );
             console.log("new department added")
-            sta();
+            callback();
         })
 
     }
