@@ -22,28 +22,28 @@ function startApp() {
     .then(function (response) {
     switch (response.action) {
     case "View all departments":
-    viewDepartments();
+    viewDepartments(startApp);
     break;
     case "View all roles":
-    viewRoles();
+    viewRoles(startApp);
     break;
     case "View all employees":
-    viewEmployees();
+    viewEmployees(startApp);
     break;
     case "Add a new department":
-    addDepartment();
+    addDepartment(startApp);
     break;
     case "Add a new role":
-    addRole();
+    addRole(startApp);
     break;
     case "Add a new employee":
-    addEmployee();
+    addEmployee(startApp);
     break;
     case "Update employee roles":
-    employeeUpdate();
+    employeeUpdate(startApp);
     break;
     case "Exit":
-    connection.end();
+    connection.end(startApp);
     break;
     }
     });
@@ -89,7 +89,7 @@ function startApp() {
         inquirer.prompt([
             {
                 type: "input",
-                name: "departmentName",
+                name: "DepartmentName",
                 message: "Please enter the name of the new department"
             }
         ]).then(data => {
