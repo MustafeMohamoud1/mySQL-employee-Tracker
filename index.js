@@ -43,7 +43,7 @@ function startApp() {
     employeeUpdate(startApp);
     break;
     case "Exit":
-    connection.end(startApp);
+    connection.end();
     break;
     }
     });
@@ -99,7 +99,7 @@ function startApp() {
             }
             );
             console.log("new department added")
-            callback();
+            sta();
         })
 
     }
