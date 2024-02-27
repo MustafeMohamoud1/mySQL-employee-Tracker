@@ -50,42 +50,42 @@ function startApp() {
     };
 
 
-    function viewDepartments(){
+    function viewDepartments(callback){
         // connection directly to MySQL database and query keyword to start query
         connection.query("SELECT * FROM departments", (err, res)=>{
             if(err) throw err
 
             console.table(res)
 
-                startApp()
+                callback();
         })
     }
 
-    function viewRoles(){
+    function viewRoles(callback){
         // connection directly to MySQL database and query keyword to start query
         connection.query("SELECT * FROM roles", (err, res)=>{
             if(err) throw err
 
             console.table(res)
 
-                startApp()
+                callback();
         })
     }
 
-    function viewEmployees(){
+    function viewEmployees(callback){
         // connection directly to MySQL database and query keyword to start query
         connection.query("SELECT * FROM employees", (err, res)=>{
             if(err) throw err
 
             console.table(res)
 
-                startApp()
+                callback();
         })
     }
 
 
     //add department
-    function addDepartment(){
+    function addDepartment(callback){
         inquirer.prompt([
             {
                 type: "input",
@@ -99,12 +99,12 @@ function startApp() {
             }
             );
             console.log("new department added")
-            startApp()
+            callback();
         })
 
     }
 
-    function addRole(){
+    function addRole(callback){
         inquirer.prompt([
             {
                 type: "input",
@@ -118,12 +118,12 @@ function startApp() {
             }
             );
             console.log("new role added")
-            startApp()
+            callback();
         })
 
     }
 
-    function addEmployee(){
+    function addEmployee(callback){
         inquirer.prompt([
             {
                 type: "input",
@@ -137,7 +137,7 @@ function startApp() {
             }
             );
             console.log("new employee added")
-            startApp()
+            callback();
         })
 
     }
@@ -152,4 +152,4 @@ function startApp() {
 
 
     //initialize app
-    startApp()
+    startApp();
