@@ -53,19 +53,6 @@ function startApp() {
     });
 }
 
-function executeFinalOperations() {
-  // Perform any final operations or cleanup before closing the connection
-
-  // Close the MySQL connection when all operations are complete
-  connection.end((err) => {
-    if (err) {
-      console.error("Error closing MySQL connection:", err);
-      return;
-    }
-    console.log("MySQL connection closed");
-  });
-}
-
 function handleAction(action, callback) {
   // Perform actions based on user input
   // Make sure to handle asynchronous operations and then call the callback
@@ -79,11 +66,8 @@ function handleAction(action, callback) {
     case "View all employees":
       viewEmployees(callback);
       break;
-    case "View all roles":
-      viewRoles(callback);
-      break;
       case "Add a new department":
-        addDepartment(startApp);
+        addDepartment(callback);
         break;
       case "Add a new role":
         addRole(callback);
@@ -147,9 +131,14 @@ function addDepartment(callback) {
     .then((data) => {
       connection.query("INSERT INTO departments SET ?", {
         name: data.DepartmentName,
-      });
+      }, (err) => {
+      if (err) {
+        console.error("Error adding department:", err);
+      } else {
       console.log("new department added");
       callback();
+      }
+    });
     });
 }
 
@@ -188,6 +177,19 @@ function addEmployee(callback) {
       callback();
     });
 }
+
+function executeFinalOperations() {
+    // Perform any final operations or cleanup before closing the connection
+  
+    // Close the MySQL connection when all operations are complete
+    connection.end((err) => {
+      if (err) {
+        console.error("Error closing MySQL connection:", err);
+        return;
+      }
+      console.log("MySQL connection closed");
+    });
+  }
 
 //initialize app
 startApp();
