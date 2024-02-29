@@ -147,13 +147,13 @@ function addRole(callback) {
     .prompt([
       {
         type: "input",
-        name: "RoleName",
+        name: "RoleTitle",
         message: "Please enter the name of the new role",
       },
     ])
     .then((data) => {
       connection.query("INSERT INTO roles SET ?", {
-        name: data.RoleName,
+        title: data.RoleTitle,
       }, (err) => {
         if (err) {
           console.error("Error adding role:", err);
@@ -166,29 +166,37 @@ function addRole(callback) {
 }
 
 function addEmployee(callback) {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "EmployeeName",
-        message: "Please enter the name of the new employee",
-      },
-    ])
-    .then((data) => {
-      connection.query("INSERT INTO employees SET ?", {
-        name: data.EmployeeName,
-      }, (err) => {
-        if (err) {
-          console.error("Error adding employee:", err);
-        } else {
-        console.log("new employee added");
-        callback();
-        }
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "EmployeeFirstName",
+          message: "Please enter the first name of the new employee",
+        },
+        {
+          type: "input",
+          name: "EmployeeSecondName",
+          message: "Please enter the second name of the new employee",
+        },
+      ])
+      .then((data) => {
+        connection.query(
+          "INSERT INTO employees SET ?",
+          {
+            first_name: data.EmployeeFirstName,
+            second_name: data.EmployeeSecondName,
+          },
+          (err) => {
+            if (err) {
+              console.error("Error adding employee:", err);
+            } else {
+              console.log("New employee added");
+              callback();
+            }
+          }
+        );
       });
-      console.log("new employee added");
-      callback();
-    });
-}
+  }
 
 function executeFinalOperations() {
     // Perform any final operations or cleanup before closing the connection
