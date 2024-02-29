@@ -154,9 +154,14 @@ function addRole(callback) {
     .then((data) => {
       connection.query("INSERT INTO roles SET ?", {
         name: data.RoleName,
+      }, (err) => {
+        if (err) {
+          console.error("Error adding role:", err);
+        } else {
+        console.log("new role added");
+        callback();
+        }
       });
-      console.log("new role added");
-      callback();
     });
 }
 
@@ -172,6 +177,13 @@ function addEmployee(callback) {
     .then((data) => {
       connection.query("INSERT INTO employees SET ?", {
         name: data.EmployeeName,
+      }, (err) => {
+        if (err) {
+          console.error("Error adding employee:", err);
+        } else {
+        console.log("new employee added");
+        callback();
+        }
       });
       console.log("new employee added");
       callback();
