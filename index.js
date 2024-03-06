@@ -155,7 +155,6 @@ function addRole(callback) {
         name: "RoleSalary",
         message: "Please enter the salary for the new role",
         validate: function (input) {
-          // Validate that the input is a positive number
           const isValid = parseFloat(input) > 0;
           return isValid || "Please enter a valid positive number for the salary.";
         },
@@ -164,7 +163,7 @@ function addRole(callback) {
         type: "list",
         name: "DepartmentId",
         message: "Please select the department for the new role",
-        choices: getDepartmentChoices(),
+        choices: getDepartmentChoices(),  
       },
     ])
     .then((data) => {
@@ -180,28 +179,28 @@ function addRole(callback) {
             console.error("Error adding role:", err);
           } else {
             console.log("New role added");
-            callback();
+            callback();  
           }
         }
       );
     });
-}
 
-function getDepartmentChoices() {
-  return new Promise((resolve, reject) => {
-    connection.query("SELECT id, name FROM departments", (err, res) => {
-      if (err) {
-        console.error("Error fetching departments:", err);
-        reject(err);
-      } else {
-        const choices = res.map((department) => ({
-          value: department.id,
-          name: department.name,
-        }));
-        resolve(choices);
-      }
+  function getDepartmentChoices() {
+    return new Promise((resolve, reject) => {
+      connection.query("SELECT id, name FROM departments", (err, res) => {
+        if (err) {
+          console.error("Error fetching departments:", err);
+          reject(err);
+        } else {
+          const choices = res.map((department) => ({
+            value: department.id,
+            name: department.name,
+          }));
+          resolve(choices);
+        }
+      });
     });
-  });
+  }
 }
 
 function addEmployee(callback) {
