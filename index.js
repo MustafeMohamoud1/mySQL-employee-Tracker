@@ -142,52 +142,72 @@ function addDepartment(callback) {
     });
 }
 
+function getDepartmentChoices(callback) {
+  connection.query("SELECT id, name FROM departments", (err, res) => {
+    if (err) {
+      console.error("Error fetching departments:", err);
+      callback(err, null);
+    } else {
+      const choices = res.map((department) => ({
+        value: department.id,
+        name: department.name,
+      }));
+      callback(null, choices);
+    }
+  });
+}
+
+// Now declare the addRole function
 function addRole(callback) {
-  getDepartmentChoices()
-    .then((choices) => {
-      inquirer.prompt([
-        {
-          type: "input",
-          name: "RoleTitle",
-          message: "Please enter the name of the new role",
+  // Call the getDepartmentChoices function with a callback
+  getDepartmentChoices((err, choices) => {
+    if (err) {
+      console.error("Error getting department choices:", err);
+      return;
+    }
+
+    // Proceed with inquirer prompts using the choices
+    inquirer.prompt([
+      {
+        type: "input",
+        name: "RoleTitle",
+        message: "Please enter the name of the new role",
+      },
+      {
+        type: "input",
+        name: "RoleSalary",
+        message: "Please enter the salary for the new role",
+        validate: function (input) {
+          const isValid = parseFloat(input) > 0;
+          return isValid || "Please enter a valid positive number for the salary.";
         },
+      },
+      {
+        type: "list",
+        name: "DepartmentId",
+        message: "Please select the department for the new role",
+        choices: choices,
+      },
+    ]).then((data) => {
+      // Execute the following code once the prompts are answered
+      connection.query(
+        "INSERT INTO roles SET ?",
         {
-          type: "input",
-          name: "RoleSalary",
-          message: "Please enter the salary for the new role",
-          validate: function (input) {
-            const isValid = parseFloat(input) > 0;
-            return isValid || "Please enter a valid positive number for the salary.";
-          },
+          title: data.RoleTitle,
+          salary: parseFloat(data.RoleSalary),
+          department_id: parseInt(data.DepartmentId),
         },
-        {
-          type: "list",
-          name: "DepartmentId",
-          message: "Please select the department for the new role",
-          choices: choices,
-        },
-      ]).then((data) => {
-        connection.query(
-          "INSERT INTO roles SET ?",
-          {
-            title: data.RoleTitle,
-            salary: parseFloat(data.RoleSalary),
-            department_id: parseInt(data.DepartmentId),
-          },
-          (err) => {
-            if (err) {
-              console.error("Error adding role:", err);
-            } else {
-              console.log("New role added");
-              callback();
-            }
+        (err) => {
+          if (err) {
+            console.error("Error adding role:", err);
+          } else {
+            console.log("New role added");
+            callback();
           }
-        );
-      });
-    })
-    .catch((error) => {
-      console.error("Error getting department choices:", error);
+        }
+      );
     });
+  });
 }
 
 function addEmployee(callback) {
