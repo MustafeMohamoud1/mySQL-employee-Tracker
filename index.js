@@ -295,13 +295,55 @@ function addEmployee(callback) {
   });
 }
 
-function executeFinalOperations() {
-  connection.end((err) => {
+function employeeUpdate(callback) {
+  connection.query("SELECT * FROM employees", (err, employees) => {
     if (err) {
-      console.error("Error closing MySQL connection:", err);
-      return;
+      console.error("Error fetching employees for role update:", err);
+      callback();
+    } else {
+      connection.query("SELECT * FROM roles", (err, roles) => {
+        if (err) {
+          console.error("Error fetching roles for role update:", err);
+          callback();
+        } else {
+          inquirer
+            .prompt([
+              {
+                type: "list",
+                name: "employeeId",
+                message: "Select the employee to update:",
+                choices: employees.map((employee) => ({
+                  value: employee.id,
+                  name: `${employee.firstname} ${employee.lastname}`,
+                })),
+              },
+              {
+                type: "list",
+                name: "roleId",
+                message: "Select the new role for the employee:",
+                choices: roles.map((role) => ({
+                  value: role.id,
+                  name: role.title,
+                })),
+              },
+            ])
+            .then((data) => {
+              connection.query(
+                "UPDATE employees SET role_id = ? WHERE id = ?",
+                [data.roleId, data.employeeId],
+                (err) => {
+                  if (err) {
+                    console.error("Error updating employee role:", err);
+                  } else {
+                    console.log("Employee role updated");
+                    callback();
+                  }
+                }
+              );
+            });
+        }
+      });
     }
-    console.log("MySQL connection closed");
   });
 }
 
@@ -442,6 +484,16 @@ function deleteEmployee(callback) {
           }
         });
     }
+  });
+}
+
+function executeFinalOperations() {
+  connection.end((err) => {
+    if (err) {
+      console.error("Error closing MySQL connection:", err);
+      return;
+    }
+    console.log("MySQL connection closed");
   });
 }
 
