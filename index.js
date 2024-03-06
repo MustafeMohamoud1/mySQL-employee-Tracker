@@ -150,19 +150,58 @@ function addRole(callback) {
         name: "RoleTitle",
         message: "Please enter the name of the new role",
       },
+      {
+        type: "input",
+        name: "RoleSalary",
+        message: "Please enter the salary for the new role",
+        validate: function (input) {
+          // Validate that the input is a positive number
+          const isValid = parseFloat(input) > 0;
+          return isValid || "Please enter a valid positive number for the salary.";
+        },
+      },
+      {
+        type: "list",
+        name: "DepartmentId",
+        message: "Please select the department for the new role",
+        choices: getDepartmentChoices(),
+      },
     ])
     .then((data) => {
-      connection.query("INSERT INTO roles SET ?", {
-        title: data.RoleTitle,
-      }, (err) => {
-        if (err) {
-          console.error("Error adding role:", err);
-        } else {
-        console.log("new role added");
-        callback();
+      connection.query(
+        "INSERT INTO roles SET ?",
+        {
+          title: data.RoleTitle,
+          salary: parseFloat(data.RoleSalary),
+          department_id: parseInt(data.DepartmentId),
+        },
+        (err) => {
+          if (err) {
+            console.error("Error adding role:", err);
+          } else {
+            console.log("New role added");
+            callback();
+          }
         }
-      });
+      );
     });
+}
+
+function getDepartmentChoices() {
+  return new Promise((resolve, reject) => {
+    connection.query("SELECT id, name FROM departments", (err, res) => {
+      if (err) {
+        console.error("Error fetching departments:", err);
+        reject(err);
+      } else {
+        const choices = res.map((department) => ({
+          value: department.id,
+          name: department.name,
+        }));
+        resolve(choices);
+      }
+    });
+  });
 }
 
 function addEmployee(callback) {
@@ -175,16 +214,16 @@ function addEmployee(callback) {
         },
         {
           type: "input",
-          name: "EmployeeSecondName",
-          message: "Please enter the second name of the new employee",
+          name: "EmployeeLastName",
+          message: "Please enter the last name of the new employee",
         },
       ])
       .then((data) => {
         connection.query(
           "INSERT INTO employees SET ?",
           {
-            first_name: data.EmployeeFirstName,
-            second_name: data.EmployeeSecondName,
+            firstname: data.EmployeeFirstName,
+            lastname: data.EmployeeLastName,
           },
           (err) => {
             if (err) {
@@ -199,9 +238,6 @@ function addEmployee(callback) {
   }
 
 function executeFinalOperations() {
-    // Perform any final operations or cleanup before closing the connection
-  
-    // Close the MySQL connection when all operations are complete
     connection.end((err) => {
       if (err) {
         console.error("Error closing MySQL connection:", err);
