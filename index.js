@@ -43,6 +43,15 @@ function startApp() {
         case "Update employee roles":
           employeeUpdate(startApp);
           break;
+        case "Delete department":
+          deleteDepartment(callback);
+          break;
+        case "Delete role":
+          deleteRole(callback);
+          break;
+        case "Delete employee":
+          deleteEmployee(callback);
+          break;
         case "Exit":
           executeFinalOperations();
           break;
