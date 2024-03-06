@@ -44,13 +44,13 @@ function startApp() {
           employeeUpdate(startApp);
           break;
         case "Delete department":
-          deleteDepartment(callback);
+          deleteDepartment(startApp);
           break;
         case "Delete role":
-          deleteRole(callback);
+          deleteRole(startApp);
           break;
         case "Delete employee":
-          deleteEmployee(callback);
+          deleteEmployee(startApp);
           break;
         case "Exit":
           executeFinalOperations();
