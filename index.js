@@ -401,38 +401,4 @@ function deleteEmployee(callback) {
   });
 }
 
-// Update your startApp function to include the new options
-function startApp() {
-  inquirer
-    .prompt([
-      {
-        name: "action",
-        type: "list",
-        message: "What action do you want?",
-        choices: [
-          // ... your existing choices
-          "Delete a department",
-          "Delete a role",
-          "Delete an employee",
-          // ... any other choices you want to add
-        ],
-      },
-    ])
-    .then(function (response) {
-      switch (response.action) {
-        // ... your existing cases
-        case "Delete a department":
-          deleteDepartment(startApp);
-          break;
-        case "Delete a role":
-          deleteRole(startApp);
-          break;
-        case "Delete an employee":
-          deleteEmployee(startApp);
-          break;
-        // ... any other cases you want to add
-      }
-    });
-}
-
 startApp();
