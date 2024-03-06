@@ -229,36 +229,70 @@ function addRole(callback) {
 }
 
 function addEmployee(callback) {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "EmployeeFirstName",
-        message: "Please enter the first name of the new employee",
-      },
-      {
-        type: "input",
-        name: "EmployeeLastName",
-        message: "Please enter the last name of the new employee",
-      },
-    ])
-    .then((data) => {
-      connection.query(
-        "INSERT INTO employees SET ?",
-        {
-          firstname: data.EmployeeFirstName,
-          lastname: data.EmployeeLastName,
-        },
-        (err) => {
-          if (err) {
-            console.error("Error adding employee:", err);
-          } else {
-            console.log("New employee added");
-            callback();
-          }
+  connection.query("SELECT * FROM roles", (err, roles) => {
+    if (err) {
+      console.error("Error fetching roles for employee addition:", err);
+      callback();
+    } else {
+      connection.query("SELECT * FROM employees WHERE manager_id IS NULL", (err, managers) => {
+        if (err) {
+          console.error("Error fetching managers for employee addition:", err);
+          callback();
+        } else {
+          inquirer
+            .prompt([
+              {
+                type: "input",
+                name: "EmployeeFirstName",
+                message: "Please enter the first name of the new employee:",
+              },
+              {
+                type: "input",
+                name: "EmployeeLastName",
+                message: "Please enter the last name of the new employee:",
+              },
+              {
+                type: "list",
+                name: "RoleId",
+                message: "Please select the role for the new employee:",
+                choices: roles.map((role) => ({
+                  value: role.id,
+                  name: role.title,
+                })),
+              },
+              {
+                type: "list",
+                name: "ManagerId",
+                message: "Please select the manager for the new employee:",
+                choices: managers.map((manager) => ({
+                  value: manager.id,
+                  name: `${manager.firstname} ${manager.lastname}`,
+                })),
+              },
+            ])
+            .then((data) => {
+              connection.query(
+                "INSERT INTO employees SET ?",
+                {
+                  firstname: data.EmployeeFirstName,
+                  lastname: data.EmployeeLastName,
+                  role_id: data.RoleId,
+                  manager_id: data.ManagerId,
+                },
+                (err) => {
+                  if (err) {
+                    console.error("Error adding employee:", err);
+                  } else {
+                    console.log("New employee added");
+                    callback();
+                  }
+                }
+              );
+            });
         }
-      );
-    });
+      });
+    }
+  });
 }
 
 function executeFinalOperations() {
@@ -272,13 +306,19 @@ function executeFinalOperations() {
 }
 
 function deleteDepartment(callback) {
+  getDepartmentChoices((err, choices) => {
+    if (err) {
+      console.error("Error getting department choices:", err);
+      return;
+    }
+  
   inquirer
     .prompt([
       {
         type: "list",
         name: "departmentId",
         message: "Select the department to delete:",
-        choices: getDepartmentChoicesSync(), // Synchronous function
+        choices: choices, 
       },
       {
         type: "confirm",
@@ -306,9 +346,10 @@ function deleteDepartment(callback) {
         callback();
       }
     });
+  });
 }
 
-// Function to delete a role
+
 function deleteRole(callback) {
   connection.query("SELECT * FROM roles", (err, roles) => {
     if (err) {
@@ -356,7 +397,7 @@ function deleteRole(callback) {
   });
 }
 
-// Function to delete an employee
+
 function deleteEmployee(callback) {
   connection.query("SELECT * FROM employees", (err, employees) => {
     if (err) {
