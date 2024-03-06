@@ -1,4 +1,3 @@
-// cli that brings mysql connection and enables queries using inquirer and javascript
 const connection = require("./connection");
 const inquirer = require("inquirer");
 
@@ -54,8 +53,6 @@ function startApp() {
 }
 
 function handleAction(action, callback) {
-  // Perform actions based on user input
-  // Make sure to handle asynchronous operations and then call the callback
   switch (action) {
     case "View all departments":
       viewDepartments(callback);
@@ -83,7 +80,6 @@ function handleAction(action, callback) {
 }
 
 function viewDepartments(callback) {
-  // connection directly to MySQL database and query keyword to start query
   connection.query("SELECT * FROM departments", (err, res) => {
     if (err) {
       console.error("Error fetching departments:", err);
@@ -95,7 +91,6 @@ function viewDepartments(callback) {
 }
 
 function viewRoles(callback) {
-  // connection directly to MySQL database and query keyword to start query
   connection.query("SELECT * FROM roles", (err, res) => {
     if (err) {
       console.error("Error fetching roles:", err);
@@ -107,7 +102,6 @@ function viewRoles(callback) {
 }
 
 function viewEmployees(callback) {
-  // connection directly to MySQL database and query keyword to start query
   connection.query("SELECT * FROM employees", (err, res) => {
     if (err) {
       console.error("Error fetching employees:", err);
@@ -118,7 +112,6 @@ function viewEmployees(callback) {
   });
 }
 
-//add department
 function addDepartment(callback) {
   inquirer
     .prompt([
@@ -157,16 +150,13 @@ function getDepartmentChoices(callback) {
   });
 }
 
-// Now declare the addRole function
 function addRole(callback) {
-  // Call the getDepartmentChoices function with a callback
   getDepartmentChoices((err, choices) => {
     if (err) {
       console.error("Error getting department choices:", err);
       return;
     }
 
-    // Proceed with inquirer prompts using the choices
     inquirer.prompt([
       {
         type: "input",
@@ -189,7 +179,6 @@ function addRole(callback) {
         choices: choices,
       },
     ]).then((data) => {
-      // Execute the following code once the prompts are answered
       connection.query(
         "INSERT INTO roles SET ?",
         {
@@ -253,5 +242,4 @@ function executeFinalOperations() {
     });
   }
 
-//initialize app
 startApp();
