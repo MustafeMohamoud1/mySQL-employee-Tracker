@@ -242,4 +242,171 @@ function executeFinalOperations() {
     });
   }
 
+  function deleteDepartment(callback) {
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "departmentId",
+          message: "Select the department to delete:",
+          choices: getDepartmentChoicesSync(), // Synchronous function
+        },
+        {
+          type: "confirm",
+          name: "confirmDelete",
+          message: "Are you sure you want to delete this department?",
+          default: false,
+        },
+      ])
+      .then((data) => {
+        if (data.confirmDelete) {
+          connection.query(
+            "DELETE FROM departments WHERE id = ?",
+            [data.departmentId],
+            (err) => {
+              if (err) {
+                console.error("Error deleting department:", err);
+              } else {
+                console.log("Department deleted");
+                callback();
+              }
+            }
+          );
+        } else {
+          console.log("Department not deleted");
+          callback();
+        }
+      });
+  }
+  
+  // Function to delete a role
+  function deleteRole(callback) {
+    connection.query("SELECT * FROM roles", (err, roles) => {
+      if (err) {
+        console.error("Error fetching roles for deletion:", err);
+        callback();
+      } else {
+        inquirer
+          .prompt([
+            {
+              type: "list",
+              name: "roleId",
+              message: "Select the role to delete:",
+              choices: roles.map((role) => ({
+                value: role.id,
+                name: role.title,
+              })),
+            },
+            {
+              type: "confirm",
+              name: "confirmDelete",
+              message: "Are you sure you want to delete this role?",
+              default: false,
+            },
+          ])
+          .then((data) => {
+            if (data.confirmDelete) {
+              connection.query(
+                "DELETE FROM roles WHERE id = ?",
+                [data.roleId],
+                (err) => {
+                  if (err) {
+                    console.error("Error deleting role:", err);
+                  } else {
+                    console.log("Role deleted");
+                    callback();
+                  }
+                }
+              );
+            } else {
+              console.log("Role not deleted");
+              callback();
+            }
+          });
+      }
+    });
+  }
+  
+  // Function to delete an employee
+  function deleteEmployee(callback) {
+    connection.query("SELECT * FROM employees", (err, employees) => {
+      if (err) {
+        console.error("Error fetching employees for deletion:", err);
+        callback();
+      } else {
+        inquirer
+          .prompt([
+            {
+              type: "list",
+              name: "employeeId",
+              message: "Select the employee to delete:",
+              choices: employees.map((employee) => ({
+                value: employee.id,
+                name: `${employee.firstname} ${employee.lastname}`,
+              })),
+            },
+            {
+              type: "confirm",
+              name: "confirmDelete",
+              message: "Are you sure you want to delete this employee?",
+              default: false,
+            },
+          ])
+          .then((data) => {
+            if (data.confirmDelete) {
+              connection.query(
+                "DELETE FROM employees WHERE id = ?",
+                [data.employeeId],
+                (err) => {
+                  if (err) {
+                    console.error("Error deleting employee:", err);
+                  } else {
+                    console.log("Employee deleted");
+                    callback();
+                  }
+                }
+              );
+            } else {
+              console.log("Employee not deleted");
+              callback();
+            }
+          });
+      }
+    });
+  }
+  
+  // Update your startApp function to include the new options
+  function startApp() {
+    inquirer
+      .prompt([
+        {
+          name: "action",
+          type: "list",
+          message: "What action do you want?",
+          choices: [
+            // ... your existing choices
+            "Delete a department",
+            "Delete a role",
+            "Delete an employee",
+            // ... any other choices you want to add
+          ],
+        },
+      ])
+      .then(function (response) {
+        switch (response.action) {
+          // ... your existing cases
+          case "Delete a department":
+            deleteDepartment(startApp);
+            break;
+          case "Delete a role":
+            deleteRole(startApp);
+            break;
+          case "Delete an employee":
+            deleteEmployee(startApp);
+            break;
+          // ... any other cases you want to add
+        }
+      });
+  }  
+
 startApp();
